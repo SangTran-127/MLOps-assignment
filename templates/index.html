@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Classification App - MLflow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .model-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .model-info h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .model-info p {
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .help-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+
+        .result h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .prediction-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 15px 0;
+        }
+
+        .probabilities {
+            margin-top: 15px;
+        }
+
+        .prob-bar {
+            margin: 10px 0;
+        }
+
+        .prob-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .prob-progress {
+            background: #e9ecef;
+            border-radius: 5px;
+            height: 25px;
+            overflow: hidden;
+        }
+
+        .prob-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: width 0.5s ease;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .examples {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .examples h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .example-btn {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .example-btn:hover {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🤖 ML Classification App</h1>
+        <p class="subtitle">Powered by MLflow Model Registry</p>
+
+        <div class="model-info" id="modelInfo">
+            <h3>📊 Model Information</h3>
+            <p>Loading model information...</p>
+        </div>
+
+        <form id="predictionForm">
+            <div class="form-group">
+                <label for="features">Enter Features (comma-separated values):</label>
+                <textarea id="features" name="features"
+                    placeholder="Example: 1.5, -0.3, 2.1, 0.8, -1.2, 0.5, 1.1, -0.9, 0.4, 1.7, -0.6, 0.2, 1.3, -0.4, 0.9, 1.0, -0.7, 0.3, 1.4, -0.5"
+                    required></textarea>
+                <p class="help-text">Enter 20 numerical values separated by commas. These represent the features of your
+                    data point.</p>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn-primary">🔮 Predict</button>
+                <button type="button" class="btn-secondary" onclick="generateRandom()">🎲 Random Example</button>
+                <button type="button" class="btn-secondary" onclick="clearForm()">🗑️ Clear</button>
+            </div>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 10px; color: #666;">Making prediction...</p>
+        </div>
+
+        <div class="result" id="result"></div>
+
+        <div class="examples">
+            <h4>💡 Quick Tips:</h4>
+            <p>• Values are typically in the range of -3 to 3 (standardized)</p>
+            <p>• Click "Random Example" to generate sample data</p>
+            <p>• The model will predict which class (0, 1, or 2) the input belongs to</p>
+        </div>
+    </div>
+
+    <script>
+        // Load model information on page load
+        window.addEventListener('load', function () {
+            fetch('/info')
+                .then(response => response.json())
+                .then(data => {
+                    const infoDiv = document.getElementById('modelInfo');
+                    if (data.error) {
+                        infoDiv.innerHTML = `
+                            <h3>⚠️ Model Not Available</h3>
+                            <p style="color: #dc3545;">${data.error}</p>
+                            <p>Please run the experiments first: <code>python run_experiments.py</code></p>
+                        `;
+                    } else {
+                        infoDiv.innerHTML = `
+                            <h3>📊 Model Information</h3>
+                            <p><strong>Model Type:</strong> ${data.model_type}</p>
+                            <p><strong>Number of Features:</strong> ${data.n_features}</p>
+                            <p><strong>Number of Classes:</strong> ${data.n_classes}</p>
+                            <p><strong>Classes:</strong> ${data.classes.join(', ')}</p>
+                            <p><strong>Status:</strong> <span style="color: #28a745;">✓ Ready</span></p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading model info:', error);
+                });
+        });
+
+        // Handle form submission
+        document.getElementById('predictionForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const featuresInput = document.getElementById('features').value;
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+
+            // Show loading
+            loading.style.display = 'block';
+            result.style.display = 'none';
+
+            // Make prediction
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `features=${encodeURIComponent(featuresInput)}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    loading.style.display = 'none';
+
+                    if (data.error) {
+                        result.className = 'result error';
+                        result.innerHTML = `
+                        <h3>❌ Error</h3>
+                        <p>${data.error}</p>
+                    `;
+                    } else {
+                        result.className = 'result success';
+
+                        let html = `
+                        <h3>✅ Prediction Result</h3>
+                        <div class="prediction-value">Class ${data.prediction}</div>
+                        <p><strong>Input Features:</strong> ${data.num_features} values</p>
+                    `;
+
+                        if (data.probabilities) {
+                            html += '<div class="probabilities"><h4>Class Probabilities:</h4>';
+                            for (const [className, prob] of Object.entries(data.probabilities)) {
+                                const percentage = (prob * 100).toFixed(2);
+                                html += `
+                                <div class="prob-bar">
+                                    <div class="prob-label">
+                                        <span>${className}</span>
+                                        <span>${percentage}%</span>
+                                    </div>
+                                    <div class="prob-progress">
+                                        <div class="prob-fill" style="width: ${percentage}%">
+                                            ${percentage}%
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            }
+                            html += '</div>';
+                        }
+
+                        result.innerHTML = html;
+                    }
+
+                    result.style.display = 'block';
+                })
+                .catch(error => {
+                    loading.style.display = 'none';
+                    result.className = 'result error';
+                    result.innerHTML = `
+                    <h3>❌ Error</h3>
+                    <p>Failed to make prediction: ${error.message}</p>
+                `;
+                    result.style.display = 'block';
+                });
+        });
+
+        // Generate random features
+        function generateRandom() {
+            const numFeatures = 20;
+            const features = [];
+            for (let i = 0; i < numFeatures; i++) {
+                // Generate random values between -3 and 3
+                const value = (Math.random() * 6 - 3).toFixed(2);
+                features.push(value);
+            }
+            document.getElementById('features').value = features.join(', ');
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('features').value = '';
+            document.getElementById('result').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
