@@ -72,6 +72,7 @@ docker-compose down
 ```
 
 Access:
+
 - **MLflow UI**: http://localhost:5000
 - **Flask App**: http://localhost:5001
 
@@ -113,34 +114,40 @@ docker rm mlops-flask
 ### Setup
 
 1. **Clone repository**:
+
 ```bash
 git clone git@github.com:SangTran-127/MLOps-assignment.git
 cd MLOps-assignment
 ```
 
 2. **Create virtual environment** (optional):
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
 3. **Install dependencies**:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 4. **Run experiments**:
+
 ```bash
 python3 run_experiments.py
 ```
 
 5. **Start MLflow UI**:
+
 ```bash
 python3 -m mlflow ui
 # Open http://localhost:5000
 ```
 
 6. **Start Flask app**:
+
 ```bash
 python3 app.py
 # Open http://localhost:5001
@@ -167,21 +174,25 @@ For convenience, use the provided scripts:
 The project includes unit tests for data generation and model training.
 
 **Install test dependencies**:
+
 ```bash
 pip install pytest pytest-cov
 ```
 
 **Run all tests**:
+
 ```bash
 pytest test_models.py -v
 ```
 
 **Run with coverage**:
+
 ```bash
 pytest test_models.py --cov=. --cov-report=html
 ```
 
 **Run specific test**:
+
 ```bash
 pytest test_models.py::TestDataGeneration::test_generate_synthetic_data_shape -v
 ```
@@ -233,12 +244,14 @@ All experiments are tracked in MLflow with:
 - Tags
 
 Access tracking data:
+
 - Locally: `mlruns/` directory
 - UI: http://localhost:5000
 
 ### Application Logs
 
 **Docker logs**:
+
 ```bash
 docker-compose logs flask-app
 docker-compose logs mlflow-server
@@ -254,18 +267,22 @@ Check `*.log` files in project directory
 ### Recommended Setup
 
 1. **Use external MLflow tracking server**:
+
    - Set `MLFLOW_TRACKING_URI` environment variable
    - Example: `http://mlflow-server.example.com`
 
 2. **Use external database** for MLflow:
+
    - PostgreSQL or MySQL recommended
    - Configure via `mlflow server --backend-store-uri`
 
 3. **Use object storage** for artifacts:
+
    - S3, Azure Blob Storage, or GCS
    - Configure via `mlflow server --default-artifact-root`
 
 4. **Enable authentication**:
+
    - Add authentication middleware to Flask app
    - Use API keys or OAuth2
 
@@ -290,24 +307,28 @@ Check `*.log` files in project directory
 
 **Issue**: MLflow UI not accessible
 **Solution**: Check if port 5000 is available, try different port:
+
 ```bash
 python3 -m mlflow ui --port 5002
 ```
 
 **Issue**: Docker container fails to start
 **Solution**: Check logs:
+
 ```bash
 docker-compose logs
 ```
 
 **Issue**: Models not loading in Flask app
 **Solution**: Ensure experiments have been run:
+
 ```bash
 python3 run_experiments.py
 ```
 
 **Issue**: GitHub Actions failing
 **Solution**: Check workflow logs in Actions tab, common causes:
+
 - Missing dependencies
 - Test failures
 - Timeout issues

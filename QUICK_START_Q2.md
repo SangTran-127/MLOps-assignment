@@ -19,6 +19,7 @@ Câu 2 đã được hoàn thành với đầy đủ CI/CD pipeline và Docker s
 ### Cách 2: Kiểm Tra Status Badge
 
 Thêm vào README (nếu muốn):
+
 ```markdown
 ![CI/CD](https://github.com/SangTran-127/MLOps-assignment/actions/workflows/mlops-pipeline.yml/badge.svg)
 ```
@@ -41,6 +42,7 @@ docker-compose down
 ```
 
 **Truy cập:**
+
 - MLflow UI: http://localhost:5000
 - Flask App: http://localhost:5001
 
@@ -77,12 +79,14 @@ pytest test_models.py --cov=. --cov-report=html
 ## 📁 Files Quan Trọng
 
 ### Documentation:
+
 - **QUESTION_2_SUMMARY.md** ← Tóm tắt chi tiết Câu 2
 - **CI_CD_GUIDE.md** ← Hướng dẫn CI/CD (Tiếng Việt)
 - **DEPLOYMENT.md** ← Deployment guide (English)
 - **README.md** ← Overview
 
 ### CI/CD:
+
 - `.github/workflows/mlops-pipeline.yml` ← GitHub Actions workflow
 - `test_models.py` ← Unit tests
 - `Dockerfile` ← Docker image
@@ -93,12 +97,14 @@ pytest test_models.py --cov=. --cov-report=html
 ## 🎯 Điểm Đã Đạt Được
 
 ### Câu 1: MLflow Project ✅
+
 - ✅ 8 experiments với lý do rõ ràng
 - ✅ Best model: SVM_RBF_C10 (F1: 82.19%)
 - ✅ Model Registry
 - ✅ Flask Web App
 
 ### Câu 2: CI/CD & Deployment ✅
+
 - ✅ GitHub Actions pipeline
 - ✅ Automated testing
 - ✅ Docker containerization
@@ -118,6 +124,7 @@ pytest test_models.py --cov=. --cov-report=html
 ## 💡 Next Steps (Nếu Có Câu 3)
 
 Có thể bạn sẽ cần:
+
 - Deploy lên cloud (AWS, GCP, Azure)
 - Setup monitoring (Prometheus, Grafana)
 - Add API documentation (Swagger)

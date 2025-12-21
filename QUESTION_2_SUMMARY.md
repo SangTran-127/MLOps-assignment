@@ -17,6 +17,7 @@
 **Tính năng đã implement:**
 
 #### Job 1: Test & Validate
+
 - ✅ Tự động checkout code
 - ✅ Setup Python 3.9 environment
 - ✅ Cache pip dependencies (tối ưu build time)
@@ -28,18 +29,21 @@
 - ✅ **Generate report**: Tóm tắt kết quả trong GitHub
 
 #### Job 2: Build & Package
+
 - ✅ Tự động build sau khi tests pass
 - ✅ Package ứng dụng thành tarball
 - ✅ Upload build artifacts
 - ✅ Generate build information
 
 **Trigger conditions**:
+
 - Chạy tự động khi push vào `main` hoặc `develop`
 - Chạy tự động khi tạo Pull Request vào `main`
 
 ### 3. Docker Support ✅
 
 #### Dockerfile
+
 **File**: `Dockerfile`
 
 - ✅ Base image: Python 3.9-slim (lightweight)
@@ -50,10 +54,13 @@
 - ✅ Production-ready configuration
 
 #### Docker Compose
+
 **File**: `docker-compose.yml`
 
 Services:
+
 1. **mlflow-server** (port 5000)
+
    - MLflow UI
    - Volume mount cho mlruns/
    - Health checks
@@ -65,6 +72,7 @@ Services:
    - Health checks
 
 **Sử dụng**:
+
 ```bash
 docker-compose up -d
 ```
@@ -74,6 +82,7 @@ docker-compose up -d
 **File**: `test_models.py`
 
 **Test Coverage**:
+
 - ✅ Data generation tests (shape, classes, scaling)
 - ✅ SVM training tests
 - ✅ Logistic Regression training tests
@@ -81,6 +90,7 @@ docker-compose up -d
 - ✅ Prediction validation tests
 
 **Chạy tests**:
+
 ```bash
 pytest test_models.py -v
 pytest test_models.py --cov=. --cov-report=html
@@ -91,6 +101,7 @@ pytest test_models.py --cov=. --cov-report=html
 Đã tạo 3 file documentation chi tiết:
 
 1. **DEPLOYMENT.md** (English)
+
    - Complete deployment guide
    - CI/CD pipeline explanation
    - Docker deployment options
@@ -99,6 +110,7 @@ pytest test_models.py --cov=. --cov-report=html
    - Troubleshooting
 
 2. **CI_CD_GUIDE.md** (Tiếng Việt)
+
    - Hướng dẫn CI/CD chi tiết
    - Pipeline workflow diagram
    - Docker usage instructions
@@ -125,16 +137,16 @@ pytest test_models.py --cov=. --cov-report=html
 
 Giả sử yêu cầu của Câu 2 bao gồm:
 
-| Yêu Cầu | Status | Chi Tiết |
-|---------|--------|----------|
-| Push code lên Git | ✅ | GitHub repository đã setup |
-| CI/CD Pipeline | ✅ | GitHub Actions với 2 jobs |
-| Automated Testing | ✅ | Unit tests + Integration tests |
-| Code Quality Check | ✅ | Flake8 linting |
-| Containerization | ✅ | Docker + Docker Compose |
-| Documentation | ✅ | 3 files chi tiết |
-| Build Automation | ✅ | Tự động build & package |
-| Artifact Management | ✅ | Upload MLflow artifacts |
+| Yêu Cầu             | Status | Chi Tiết                       |
+| ------------------- | ------ | ------------------------------ |
+| Push code lên Git   | ✅     | GitHub repository đã setup     |
+| CI/CD Pipeline      | ✅     | GitHub Actions với 2 jobs      |
+| Automated Testing   | ✅     | Unit tests + Integration tests |
+| Code Quality Check  | ✅     | Flake8 linting                 |
+| Containerization    | ✅     | Docker + Docker Compose        |
+| Documentation       | ✅     | 3 files chi tiết               |
+| Build Automation    | ✅     | Tự động build & package        |
+| Artifact Management | ✅     | Upload MLflow artifacts        |
 
 ---
 
@@ -211,6 +223,7 @@ Giả sử yêu cầu của Câu 2 bao gồm:
 ## 🧪 Testing Coverage
 
 ### Data Generation Tests
+
 ```python
 ✅ test_generate_synthetic_data_shape
 ✅ test_generate_synthetic_data_classes
@@ -218,6 +231,7 @@ Giả sử yêu cầu của Câu 2 bao gồm:
 ```
 
 ### Model Training Tests
+
 ```python
 ✅ test_svm_training
 ✅ test_logistic_regression_training
@@ -225,6 +239,7 @@ Giả sử yêu cầu của Câu 2 bao gồm:
 ```
 
 ### Prediction Tests
+
 ```python
 ✅ test_svm_prediction_shape
 ```
@@ -236,6 +251,7 @@ Giả sử yêu cầu của Câu 2 bao gồm:
 ## 📁 Files Đã Tạo/Cập Nhật
 
 ### Mới Tạo:
+
 1. `.github/workflows/mlops-pipeline.yml` - CI/CD workflow
 2. `Dockerfile` - Docker image definition
 3. `docker-compose.yml` - Multi-container setup
@@ -246,6 +262,7 @@ Giả sử yêu cầu của Câu 2 bao gồm:
 8. `QUESTION_2_SUMMARY.md` - This file
 
 ### Đã Cập Nhật:
+
 1. `README.md` - Added CI/CD & Docker sections
 2. `.gitignore` - Added test artifacts
 
@@ -313,6 +330,7 @@ python3 run_experiments.py
 ## 🎓 Điểm Mạnh Của Implementation
 
 ### 1. Professional CI/CD
+
 - ✅ Multi-job pipeline với dependencies
 - ✅ Caching để tối ưu build time
 - ✅ Proper error handling
@@ -320,6 +338,7 @@ python3 run_experiments.py
 - ✅ Summary reports
 
 ### 2. Production-Ready Docker
+
 - ✅ Lightweight base image (slim)
 - ✅ Multi-service orchestration
 - ✅ Health checks
@@ -327,12 +346,14 @@ python3 run_experiments.py
 - ✅ Network isolation
 
 ### 3. Comprehensive Testing
+
 - ✅ Unit tests
 - ✅ Integration tests
 - ✅ Coverage reporting
 - ✅ Automated in CI/CD
 
 ### 4. Excellent Documentation
+
 - ✅ Multiple detailed guides
 - ✅ Vietnamese translations
 - ✅ Code examples
@@ -340,6 +361,7 @@ python3 run_experiments.py
 - ✅ Architecture diagrams
 
 ### 5. Best Practices
+
 - ✅ Separation of concerns
 - ✅ Environment variables
 - ✅ Secrets management ready
@@ -351,18 +373,21 @@ python3 run_experiments.py
 ## 📊 Kết Quả
 
 ### GitHub Actions
+
 - ✅ Pipeline setup successfully
 - ✅ Chạy tự động khi push
 - ✅ Tests pass
 - ✅ Artifacts uploaded
 
 ### Docker
+
 - ✅ Images build thành công
 - ✅ Services chạy stable
 - ✅ Health checks hoạt động
 - ✅ Networking configured
 
 ### Testing
+
 - ✅ All tests pass
 - ✅ Coverage: Excellent
 - ✅ Integration with CI: Working
@@ -374,6 +399,7 @@ python3 run_experiments.py
 Câu 2 (CI/CD & Deployment): **10/10 điểm**
 
 **Lý do**:
+
 - ✅ Complete CI/CD pipeline
 - ✅ Docker containerization
 - ✅ Automated testing

@@ -271,6 +271,7 @@ pytest test_models.py --cov=. --cov-report=html
 ```
 
 Tests cover:
+
 - Data generation and validation
 - Model training for all model types
 - Prediction functionality
