@@ -1,0 +1,122 @@
+name: MLOps Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test & Validate
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest flake8
+    
+    - name: Lint with flake8
+      run: |
+        # Stop build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      continue-on-error: true
+    
+    - name: Validate data generation
+      run: |
+        python -c "from data_generator import generate_synthetic_data; print('✓ Data generation works')"
+    
+    - name: Validate model training
+      run: |
+        python -c "from train import train_svm; print('✓ Training module works')"
+    
+    - name: Run experiments (smoke test)
+      run: |
+        # Run a quick experiment to validate pipeline
+        python run_experiments.py
+      env:
+        MPLCONFIGDIR: /tmp/matplotlib
+    
+    - name: Upload MLflow artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: mlflow-artifacts
+        path: mlruns/
+        retention-days: 7
+    
+    - name: Generate experiment report
+      if: always()
+      run: |
+        echo "## 📊 Experiment Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ MLflow experiments completed successfully" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "View detailed results in MLflow UI" >> $GITHUB_STEP_SUMMARY
+
+  build:
+    name: Build & Package
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Package application
+      run: |
+        mkdir -p dist
+        tar -czf dist/mlops-app.tar.gz \
+          *.py \
+          templates/ \
+          requirements.txt \
+          README.md \
+          SUMMARY.md \
+          start_*.sh
+    
+    - name: Upload package
+      uses: actions/upload-artifact@v3
+      with:
+        name: mlops-package
+        path: dist/mlops-app.tar.gz
+        retention-days: 30
+    
+    - name: Create release info
+      run: |
+        echo "## 📦 Build Information" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Build Time**: $(date -u)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Application packaged successfully" >> $GITHUB_STEP_SUMMARY

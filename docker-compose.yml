@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mlflow-server:
+    image: python:3.9-slim
+    container_name: mlflow-server
+    working_dir: /app
+    volumes:
+      - ./mlruns:/app/mlruns
+      - ./requirements.txt:/app/requirements.txt
+    ports:
+      - "5000:5000"
+    command: >
+      sh -c "pip install mlflow &&
+             mlflow ui --host 0.0.0.0 --port 5000"
+    networks:
+      - mlops-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  flask-app:
+    build: .
+    container_name: flask-app
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mlflow-server
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow-server:5000
+    networks:
+      - mlops-network
+    restart: unless-stopped
+
+networks:
+  mlops-network:
+    driver: bridge

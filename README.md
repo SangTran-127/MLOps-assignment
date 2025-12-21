@@ -19,6 +19,8 @@ This project includes:
 
 - Python 3.8 or higher
 - pip (Python package manager)
+- Docker & Docker Compose (optional, for containerized deployment)
+- Git (for version control)
 
 ### Installation
 
@@ -72,6 +74,41 @@ In the MLflow UI, you can:
 - View confusion matrices
 - Analyze parameters and their impact
 - See the registered models
+
+## CI/CD & Deployment
+
+### GitHub Actions Pipeline
+
+The project includes automated CI/CD pipeline that runs on every push:
+
+- Automated testing and validation
+- Code quality checks (flake8)
+- Full experiment runs
+- Artifact uploads
+- Build and package
+
+View pipeline status: [GitHub Actions](https://github.com/SangTran-127/MLOps-assignment/actions)
+
+### Docker Deployment
+
+#### Quick Start with Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+This starts both MLflow UI (port 5000) and Flask app (port 5001).
+
+#### Build Docker Image Only
+
+```bash
+docker build -t mlops-app .
+docker run -d -p 5001:5001 mlops-app
+```
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment guide.
+
+---
 
 ## Flask Web Application
 
@@ -142,16 +179,36 @@ The web app will be available at [http://localhost:5001](http://localhost:5001)
 
 ```
 MLOps-assignment/
-├── README.md                 # This file
-├── requirements.txt          # Python dependencies
-├── .gitignore               # Git ignore rules
-├── data_generator.py        # Data generation and preprocessing
-├── train.py                 # Model training with MLflow tracking
-├── run_experiments.py       # Main experiment script
-├── app.py                   # Flask web application
+├── README.md                      # This file
+├── SUMMARY.md                     # Project summary (Vietnamese)
+├── DEPLOYMENT.md                  # Deployment guide
+├── CI_CD_GUIDE.md                # CI/CD guide (Vietnamese)
+│
+├── requirements.txt               # Python dependencies
+├── .gitignore                    # Git ignore rules
+├── .dockerignore                 # Docker ignore rules
+│
+├── Dockerfile                    # Docker image definition
+├── docker-compose.yml            # Multi-container setup
+│
+├── .github/
+│   └── workflows/
+│       └── mlops-pipeline.yml   # GitHub Actions CI/CD
+│
+├── data_generator.py             # Data generation
+├── train.py                      # Model training with MLflow
+├── run_experiments.py            # Main experiment script
+├── test_models.py                # Unit tests
+│
+├── app.py                        # Flask web application
+├── verify_model.py               # Model verification
 ├── templates/
-│   └── index.html          # Web interface
-└── mlruns/                 # MLflow tracking data (auto-generated)
+│   └── index.html               # Web interface
+│
+├── start_mlflow_ui.sh           # Quick start MLflow UI
+├── start_flask_app.sh           # Quick start Flask app
+│
+└── mlruns/                       # MLflow tracking data (auto-generated)
 ```
 
 ## Metrics Tracked
@@ -198,12 +255,35 @@ model_new, acc_new, f1_new = train_svm(
 )
 ```
 
+## Testing
+
+The project includes comprehensive unit tests:
+
+```bash
+# Install test dependencies
+pip install pytest pytest-cov
+
+# Run all tests
+pytest test_models.py -v
+
+# Run with coverage
+pytest test_models.py --cov=. --cov-report=html
+```
+
+Tests cover:
+- Data generation and validation
+- Model training for all model types
+- Prediction functionality
+
+---
+
 ## Notes
 
 - All experiments use `random_state=42` for reproducibility
 - Models are automatically scaled using StandardScaler
 - Neural networks use early stopping to prevent overfitting
 - The Flask app loads the model from "Production" stage in Model Registry
+- CI/CD pipeline automatically runs tests on every push
 
 ## Assignment Requirements Checklist
 

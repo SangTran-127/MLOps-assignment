@@ -18,3 +18,8 @@ build/
 venv/
 env/
 models/
+.pytest_cache/
+.coverage
+htmlcov/
+*.bak
+.ipynb_checkpoints/
