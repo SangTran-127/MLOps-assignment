@@ -22,9 +22,8 @@ COPY train.py .
 COPY verify_model.py .
 COPY templates/ templates/
 
-# Copy MLflow artifacts (if needed)
-# Note: In production, you'd load models from MLflow server
-COPY mlruns/ mlruns/
+# Create mlruns directory (models will be trained on startup if needed)
+RUN mkdir -p mlruns
 
 # Expose Flask port
 EXPOSE 5001
