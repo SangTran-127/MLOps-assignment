@@ -24,6 +24,8 @@ services:
   flask-app:
     build: .
     container_name: flask-app
+    volumes:
+      - ./mlruns:/app/mlruns
     ports:
       - "5001:5001"
     depends_on:
